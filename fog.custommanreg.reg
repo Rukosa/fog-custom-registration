@@ -200,11 +200,12 @@ while [[ -z $askme ]]; do
             ret=""
             retry=3
             while [[ $ret != "#!ok" && ! $retry -eq 0 ]]; do
-                echo " * Enter FOG GUI Username and Password"
+                echo " * Auto Entering FOG GUI Username and Password"
                 echo -n "    Username: "
-                read username
                 echo -n "    Password: "
-                read -s password
+                #Change these to your fog credentials
+                username="admin"
+                password="password"
                 user64=$(echo $username | tr -d '\012' | base64)
                 pass64=$(echo $password | tr -d '\012' | base64)
                 ret=$(curl -Lks --data "sysuuid=${sysuuid}&mac=$mac&username=$user64&password=$pass64" ${web}service/checkcredentials.php 2>/dev/null)
