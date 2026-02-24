@@ -188,50 +188,13 @@ primaryuser=$(echo "" | base64)
 other1=$(echo "" | base64)
 other2=$(echo "" | base64)
 askme=""
-#Deploy image now 
-while [[ -z $askme ]]; do
-    askme="Y"
-    case $askme in
-        [Nn]|[Nn][Oo]|"")
-            askme="N"
-            ;;
-        [Yy]|[Yy][Ee][Ss])
-            tmp=""
-            ret=""
-            retry=3
-            while [[ $ret != "#!ok" && ! $retry -eq 0 ]]; do
-                echo " * Auto Entering FOG GUI Username and Password"
-                echo -n "    Username: "
-                echo -n "    Password: "
-                #Change these to your fog credentials
-                username="admin"
-                password="password"
-                user64=$(echo $username | tr -d '\012' | base64)
-                pass64=$(echo $password | tr -d '\012' | base64)
-                ret=$(curl -Lks --data "sysuuid=${sysuuid}&mac=$mac&username=$user64&password=$pass64" ${web}service/checkcredentials.php 2>/dev/null)
-                case $ret in
-                    '#!ok')
-                        echo
-                        echo " * This host will reboot and deployment will start!"
-                        ret=$tmp
-                        realdoimage=$(echo -n 1 | base64)
-                        break
-                        ;;
-                    '#!il')
-                        echo
-                        echo " * Error: Invalid Login! ($retry remaining)"
-                        let retry-=1
-                        ;;
-                esac
-            done
-            askme="Y"
-            ;;
-        *)
-            askme=""
-            echo " * Invalid input, please try again"
-            ;;
-    esac
-done
+#Deploy image now
+echo " * Skipping Credential Check" 
+username="fog"
+password="password"
+user64=$(echo -n "$username" | base64)
+pass64=$(echo -n "$password" | base64)
+realdoimage=$(echo -n 1 | base64)
 dots "Attempting to register host"
 res=""
 while [[ -z $res ]]; do
